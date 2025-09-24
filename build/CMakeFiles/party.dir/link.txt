@@ -1,1 +1,0 @@
-/usr/bin/c++ CMakeFiles/party.dir/src/main_party.cpp.o -o party  libcore.a 

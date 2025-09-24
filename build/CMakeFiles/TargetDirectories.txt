@@ -1,4 +1,0 @@
-/root/mypsi/ssvid/build/CMakeFiles/core.dir
-/root/mypsi/ssvid/build/CMakeFiles/party.dir
-/root/mypsi/ssvid/build/CMakeFiles/edit_cache.dir
-/root/mypsi/ssvid/build/CMakeFiles/rebuild_cache.dir

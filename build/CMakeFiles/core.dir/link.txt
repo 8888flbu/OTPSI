@@ -1,2 +1,0 @@
-/usr/bin/ar qc libcore.a CMakeFiles/core.dir/src/gf128.cpp.o CMakeFiles/core.dir/src/hash_prg.cpp.o CMakeFiles/core.dir/src/poly.cpp.o CMakeFiles/core.dir/src/rbokvs.cpp.o CMakeFiles/core.dir/src/layout.cpp.o CMakeFiles/core.dir/src/wire.cpp.o
-/usr/bin/ranlib libcore.a
