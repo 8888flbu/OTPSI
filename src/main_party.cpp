@@ -15,11 +15,15 @@ static Block128 X(u64 a, u64 b){ return Block128{a,b}; }
 
 int main(){
   // ====== 可配置参数 ======
+    // ====== 可配置参数 ======
   const int n = 3;                 // 参与方数量 P1,P2,P3
   const int k = 2;                 // 阈值（示例设置 k=2）
-  const double eps_okvs = 0.07;    // OKVS 负载
-  const size_t w = 64;             // RB-OKVS 带宽（占位）
+
+  // ---- OKVS / 哈希表参数（只保留这一处定义！）----
+  const double eps_okvs = 0.05;    // RB-OKVS 负载 ~ 5%（速率≈0.95）
+  const uint32_t w = 192;          // RB-OKVS 带宽（先用 192，后续可调）
   const double eps_hash = 1.3;     // 哈希表负载
+
   const u64 salt_tag = 0x13572468abcdef99ULL;  // 标签盐
   const u64 seed_pos = 0x24681357abcdef01ULL;  // 位置哈希种子
 
@@ -46,15 +50,21 @@ int main(){
   }
 
   // ====== S13: OKVS 编码 & “交换”（本示例直接内存中共享） ======
-  std::vector<RBOKVS> okvs(n+1);
-  std::vector<size_t> ni(n+1);
-  for(int i=1;i<=n;++i){
+std::vector<RBOKVS> okvs(n+1);
+std::vector<size_t> ni(n+1);
+
+for (int i = 1; i <= n; ++i) {
     ni[i] = Xs[i].size();
+
     OKVSParams p;
-    p.m = size_t((1.0+eps_okvs)*ni[i]) + 1;
-    p.w = w; p.seed_r1 = 1234+i; p.seed_r2 = 5678+i;
+    p.m = static_cast<size_t>(std::ceil((1.0 + eps_okvs) * ni[i]));
+    if (p.m < (size_t)w + 1) p.m = (size_t)w + 1;  // 确保 m - w >= 1
+    p.w = w;
+    p.seed_r1 = 0xA1B2C3D400000000ULL ^ (uint64_t)i;
+    p.seed_r2 = 0x0F1E2D3C00000000ULL ^ ((uint64_t)i << 8);
+
     okvs[i] = RBOKVS::Encode(kv_all[i], p);
-  }
+}
 
   // ====== S14: 解码 σ_{i,j}^γ ======
   // 构造 T_i（哈希表），B = eps_hash * M
