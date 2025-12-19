@@ -68,7 +68,8 @@ static double run_once(
     tag_all[i].reserve(Xs[i].size());
 
     for(const auto& x : Xs[i]){
-      PRG prg(mix_seed(x, 0xC0FFEEULL ^ (u64)i));
+      constexpr u64 poly_salt = 0xC0FFEEULL;   // 固定全局盐(只用于多项式系数)
+      PRG prg(mix_seed(x, poly_salt));         // 只依赖 x
       Block128 fxi = poly_eval_fx_at_i(x, alpha_i, k, prg);
       kv_all[i].push_back({x, fxi});
       tag_all[i].push_back(tag_of(x, salt_tag));
@@ -268,6 +269,12 @@ int main(){
                           << "] COMM S13="<<S13_med
                           << " S14="<<S14_med
                           << " TOTAL="<<Tot_med << "\n";
+                std::cout << "[m="<<m<<", t="<<t<<", n="<<n
+          << "] RT median="<<med<<" s"
+          << " p2.5="<<p2<<" s"
+          << " p97.5="<<p97<<" s"
+          << "\n";
+
             }
         }
     }

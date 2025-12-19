@@ -1,7 +1,23 @@
+# build
 build/
-bench_mpsi
-*.o
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+
+# outputs
+*.log
+*.csv
 *.png
 *.pdf
-*.csv
-*.tgz
+
+# python cache
+__pycache__/
+*.pyc
+
+# editor
+.vscode/
+.idea/
+
+# OS
+.DS_Store
